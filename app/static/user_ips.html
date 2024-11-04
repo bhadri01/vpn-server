@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List IPs for User</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center" id="username-title"></h1>
+        <table class="table table-bordered table-hover mt-4">
+            <thead>
+                <tr>
+                    <th>IP Address</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="vpn-ips-table">
+                <!-- Data will be inserted here dynamically -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const username = params.get('username');
+        document.getElementById('username-title').innerText = `IP Addresses for ${username}`;
+
+        // Fetch the IP addresses for the selected user
+        fetch(`/api/vpn/userList/${username}`)
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.getElementById('vpn-ips-table');
+                data.output.forEach(ip => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td><a href="show_conf.html?username=${username}&ip=${ip}" class="btn btn-link">${ip}</a></td>
+                        <td>
+                            <button class="btn btn-danger" onclick="removeUser('${username}', '${ip}')">Remove</button>
+                        </td>`;
+                    tableBody.appendChild(row);
+                });
+            });
+
+        // Remove the user with the selected IP
+        function removeUser(username, ip) {
+            if (confirm(`Are you sure you want to remove user: ${username} with IP: ${ip}?`)) {
+                fetch(`/api/vpn/remove/${username}/${ip}`, { method: 'DELETE' })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(data.message || 'User removed successfully!');
+                        window.location.reload();
+                    });
+            }
+        }
+    </script>
+</body>
+</html>
