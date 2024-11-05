@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from typing import AsyncGenerator
 from contextlib import asynccontextmanager
 
-DATABASE_URL = "sqlite+aiosqlite:///./test.db"  # Update this to your actual database URL
+DATABASE_URL = "sqlite+aiosqlite:///./vpn.db"  # Update this to your actual database URL
 
 def create_engine(url, **kwargs):
     """Create an asynchronous SQLAlchemy engine."""

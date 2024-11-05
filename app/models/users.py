@@ -5,7 +5,7 @@ from core.database import Base
 class User(Base):
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(String, primary_key=True, index=True)
     name = Column(String, index=True)
     device_name = Column(String, index=True)
     ip_address = Column(String, index=True)
